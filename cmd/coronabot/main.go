@@ -10,10 +10,14 @@ import (
 	"time"
 
 	"github.com/disiqueira/coronabot/internal/application"
+	"github.com/disiqueira/coronabot/internal/domain/model"
 	"github.com/disiqueira/coronabot/internal/domain/service"
 	"github.com/disiqueira/coronabot/internal/infrastructure/arcgis"
 	"github.com/disiqueira/coronabot/internal/infrastructure/slack"
+	"github.com/disiqueira/coronabot/internal/infrastructure/telegram"
+
 	slackLib "github.com/nlopes/slack"
+	telegramLib "gopkg.in/tucnak/telebot.v2"
 )
 
 func main() {
@@ -22,19 +26,36 @@ func main() {
 	log.Println("Starting CoronaBot")
 
 	slackToken := os.Getenv("SLACK_TOKEN")
-	if slackToken == "" {
-		log.Print("no slack token provided. Set SLACK_TOKEN environment variable")
+	telegramToken := os.Getenv("TELEGRAM_TOKEN")
+
+	var messageSender model.MessageSender
+	switch {
+	case slackToken != "":
+		slackChannel := os.Getenv("SLACK_CHANNEL_ID")
+		if slackChannel == "" {
+			log.Print("no slack channel provided. Set SLACK_CHANNEL_ID environment variable")
+			os.Exit(1)
+		}
+
+		slackCon := slackLib.New(slackToken)
+		messageSender = slack.New(slackCon, slackChannel)
+	case telegramToken != "":
+		telegramBot, err := telegramLib.NewBot(telegramLib.Settings{
+			Token: telegramToken,
+			Poller: &telegramLib.LongPoller{
+				Timeout: 15 * time.Second,
+			},
+		})
+		if err != nil {
+			log.Print("failed to connect to telegram bot with given token")
+			os.Exit(1)
+		}
+
+		messageSender = telegram.New(telegramBot)
+	default:
+		log.Print("no slack or telegram token provided. Set SLACK_TOKEN or TELEGRAM_TOKEN environment variable")
 		os.Exit(1)
 	}
-
-	slackChannel := os.Getenv("SLACK_CHANNEL_ID")
-	if slackChannel == "" {
-		log.Print("no slack channel provided. Set SLACK_CHANNEL_ID environment variable")
-		os.Exit(1)
-	}
-
-	slackCon := slackLib.New(slackToken)
-	slackClient := slack.New(slackCon, slackChannel)
 
 	httpClient := &http.Client{
 		Timeout: 10 * time.Second,
@@ -43,7 +64,7 @@ func main() {
 
 	statusPerCountryToMessageService := service.NewStatusListToMessage()
 
-	notify := application.NewNotifyService(slackClient, statusReporter, statusPerCountryToMessageService)
+	notify := application.NewNotifyService(messageSender, statusReporter, statusPerCountryToMessageService)
 
 	notifyInterval := notifyInterval()
 	notifyTimer := time.NewTicker(notifyInterval)
