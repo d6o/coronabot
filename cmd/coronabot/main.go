@@ -46,7 +46,7 @@ func main() {
 	notify := application.NewNotifyService(slackClient, statusReporter, statusPerCountryToMessageService)
 
 	notifyInterval := notifyInterval()
-	notifyTimer := time.NewTicker(notifyInterval)
+	notifyTimer := time.NewTicker(notifyInterval * time.Minute)
 
 	for {
 		select {
