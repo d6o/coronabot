@@ -1,7 +1,7 @@
 # CoronaBot ![Language Badge](https://img.shields.io/badge/Language-Go-blue.svg) ![Go Report](https://goreportcard.com/badge/github.com/DiSiqueira/coronabot) ![License Badge](https://img.shields.io/badge/License-MIT-blue.svg) ![Status Badge](https://img.shields.io/badge/Status-Beta-brightgreen.svg)
 
 ## What is CoronaBot?
-CoronaBot is a simple Slack bot to update users about the Corona virus spread progression periodically.
+CoronaBot is a simple Slack/Telegram bot to update users about the Corona virus spread progression periodically.
 
 ## Where does the data come from?
 Data comes from ArcGIS REST API.
@@ -10,18 +10,29 @@ Data comes from ArcGIS REST API.
 CoronaBot is on beta. Pull Requests [are welcome](https://github.com/DiSiqueira/coronabot#social-coding)
 
 # How to use this image
-Start an instance 
+
+Start an instance of Slack bot
 
 ```bash 
 $ docker run -e SLACK_TOKEN=xoxp-1111111-22222-3333-444 -e SLACK_CHANNEL_ID=C5P11AABB22 diegosiqueira/coronabot
 ```
 
-Use a custom notify interval 
+Start an instance of Telegram bot. Bot will start sending notifications after recieving `/start` command. `/stop` command stops sending of notifications.
+
+```bash 
+$ docker run -e TELEGRAM_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11 diegosiqueira/coronabot
+```
+
+Use a custom notify interval (same with Telegram bot)
 ```bash
 $ docker run -e SLACK_TOKEN=xoxp-1111111-22222-3333-444 -e SLACK_CHANNEL_ID=C5P11AABB22 -e NOTIFY_INTERVAL_MINUTES=30 diegosiqueira/coronabot
 ```
 
+Slack message example:
 # ![CoronaBot](https://i.imgur.com/oYKRPHL.png)
+
+Telegram message example:
+# ![CoronaBot](https://i.imgur.com/ShwKeOh.jpg)
 
 ## Building from source
 
@@ -42,6 +53,10 @@ Slack token with permissions to post on a channel. Hot to generate a Slack Token
 *SLACK_CHANNEL_ID*
 
 Slack channel id can be found as the last argument on the channel url. Example channel url: https://app.slack.com/client/T0LC9999F/C5P111QZB5 Example channel id: C5P111QZB5
+
+*TELEGRAM_TOKEN*
+
+Telegram bot token (use `@botfather` in Telegram to create a bot).
 
 *NOTIFY_INTERVAL_MINUTES*
 
