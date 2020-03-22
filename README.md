@@ -49,6 +49,11 @@ Slack channel id can be found as the last argument on the channel url. Example c
 
 Interval that the bot will update the chat with the latest CoronaVirus updates in minutes. Defaults to 60.
 
+*LIST_LIMIT*
+
+Number of items that will be printed in the message. Defaults to 50.
+Note: A large number of items can break slack formatting.
+
 ## Roadmap
 * Listen to termination signals
 * Unit tests
