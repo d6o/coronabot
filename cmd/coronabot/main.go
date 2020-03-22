@@ -9,11 +9,12 @@ import (
 	"strconv"
 	"time"
 
+	slackLib "github.com/nlopes/slack"
+
 	"github.com/disiqueira/coronabot/internal/application"
 	"github.com/disiqueira/coronabot/internal/domain/service"
 	"github.com/disiqueira/coronabot/internal/infrastructure/arcgis"
 	"github.com/disiqueira/coronabot/internal/infrastructure/slack"
-	slackLib "github.com/nlopes/slack"
 )
 
 func main() {
@@ -41,7 +42,7 @@ func main() {
 	}
 	statusReporter := arcgis.New(httpClient)
 
-	statusPerCountryToMessageService := service.NewStatusListToMessage()
+	statusPerCountryToMessageService := service.NewStatusListToMessage(listLimit())
 
 	notify := application.NewNotifyService(slackClient, statusReporter, statusPerCountryToMessageService)
 
@@ -77,4 +78,20 @@ func notifyInterval() time.Duration {
 	}
 
 	return time.Duration(notifyInt)
+}
+
+func listLimit() int {
+	listLimit := os.Getenv("LIST_LIMIT")
+	if listLimit == "" {
+		log.Println("no custom list limit provided, defaulting to 50. To modify set LIST_LIMIT environment variable")
+		return 50
+	}
+
+	limit, err := strconv.Atoi(listLimit)
+	if err != nil {
+		log.Printf("invalid custom limit list provided, defaulting to 50. value: %s error: %s\n", listLimit, err)
+		return 50
+	}
+
+	return limit
 }

@@ -8,11 +8,14 @@ import (
 
 type (
 	StatusListToMessage struct {
+		limit int
 	}
 )
 
-func NewStatusListToMessage() *StatusListToMessage {
-	return &StatusListToMessage{}
+func NewStatusListToMessage(limit int) *StatusListToMessage {
+	return &StatusListToMessage{
+		limit: limit,
+	}
 }
 
 func (s StatusListToMessage) Convert(statusList []model.Status) model.Message {
@@ -21,9 +24,8 @@ func (s StatusListToMessage) Convert(statusList []model.Status) model.Message {
 	result += "```"
 	result += fmt.Sprintf("|%20s|%10s|%7s|%10s|\n", "Country", "Confirmed", "Deaths", "Recovered")
 	result += fmt.Sprintf("|%20s|%10s|%7s|%10s|\n", "", "", "", "")
-	i := 0
-	for _, status := range statusList {
-		if i++; i <= 50 {
+	for i, status := range statusList {
+		if i <= s.limit {
 			result += fmt.Sprintf("|%20s|%10d|%7d|%10d|\n", status.Country(), status.Confirmed(), status.Deaths(), status.Recovered())
 		}
 	}
