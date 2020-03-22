@@ -20,7 +20,7 @@ func NewStatusListToMessage(limit int) *StatusListToMessage {
 
 func (s StatusListToMessage) Convert(statusList []model.Status) model.Message {
 	result := ":biohazard_sign: *|COVID-19|*\n"
-	result += "_50 Most affected countries:_\n"
+	result += fmt.Sprintf("_%d Most affected countries:_\n", s.limit)
 	result += "```"
 	result += fmt.Sprintf("|%20s|%10s|%7s|%10s|\n", "Country", "Confirmed", "Deaths", "Recovered")
 	result += fmt.Sprintf("|%20s|%10s|%7s|%10s|\n", "", "", "", "")
