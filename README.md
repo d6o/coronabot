@@ -30,7 +30,6 @@ $ docker run -e SLACK_TOKEN=xoxp-1111111-22222-3333-444 -e SLACK_CHANNEL_ID=C5P1
 
 ```bash
 $ go install github.com/DiSiqueira/coronabot
-$ coronabot
 $ export SLACK_TOKEN="xoxp-1111111-22222-3333-444"
 $ export SLACK_CHANNEL_ID="C5P11AABB22"
 $ coronabot
