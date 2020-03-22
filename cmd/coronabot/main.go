@@ -9,11 +9,12 @@ import (
 	"strconv"
 	"time"
 
+	slackLib "github.com/nlopes/slack"
+
 	"github.com/disiqueira/coronabot/internal/application"
 	"github.com/disiqueira/coronabot/internal/domain/service"
 	"github.com/disiqueira/coronabot/internal/infrastructure/arcgis"
 	"github.com/disiqueira/coronabot/internal/infrastructure/slack"
-	slackLib "github.com/nlopes/slack"
 )
 
 func main() {
