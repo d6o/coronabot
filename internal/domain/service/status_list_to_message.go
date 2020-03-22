@@ -25,7 +25,7 @@ func (s StatusListToMessage) Convert(statusList []model.Status) model.Message {
 	result += fmt.Sprintf("|%20s|%10s|%7s|%10s|\n", "Country", "Confirmed", "Deaths", "Recovered")
 	result += fmt.Sprintf("|%20s|%10s|%7s|%10s|\n", "", "", "", "")
 	for i, status := range statusList {
-		if i <= s.limit {
+		if i < s.limit {
 			result += fmt.Sprintf("|%20s|%10d|%7d|%10d|\n", status.Country(), status.Confirmed(), status.Deaths(), status.Recovered())
 		}
 	}
