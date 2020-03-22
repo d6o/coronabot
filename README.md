@@ -3,6 +3,9 @@
 ## What is CoronaBot?
 CoronaBot is a simple Slack bot to update users about the Corona virus spread progression periodically.
 
+It shows the 50 most affected countries.
+
+
 ## Where does the data come from?
 Data comes from ArcGIS REST API.
 
